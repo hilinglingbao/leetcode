@@ -34,13 +34,27 @@
 
 ---
 
-### 示例 1
+### 示例
 
 ```text
 输入: s = "leetcode", wordDict = ["leet", "code"]
 输出: true
 解释: "leetcode" 可以由 "leet" 和 "code" 拼接成
 
+输入: s = "applepenapple", wordDict = ["apple", "pen"]
+输出: true
+解释: "applepenapple" 可以由 "apple" + "pen" + "apple" 拼接
+
+输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+输出: false
+```
+
+---
+
+### 方法一：动态规划 (DP)
+
+```python
+from typing import List
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         wordSet = set(wordDict)  # 转集合加速查找
@@ -54,3 +68,30 @@ class Solution:
                     break
         
         return dp[len(s)]
+```
+
+### 方法二：递归 + 记忆化 (DFS + Memo)
+
+```python
+from typing import List
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        wordSet = set(wordDict)  # 转集合加速查找
+        memo = {}  # memo 存储子串结果
+        
+        def dfs(subs: str) -> bool:
+            if subs in memo:
+                return memo[subs]
+            if not subs:
+                return True  # 空字符串可以拆分
+            for word in wordSet:
+                if subs.startswith(word):
+                    if dfs(subs[len(word):]):
+                        memo[subs] = True
+                        return True
+            memo[subs] = False
+            return False
+        
+        return dfs(s)
+```
+
