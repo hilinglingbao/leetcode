@@ -95,3 +95,36 @@ class Solution:
         return dfs(s)
 ```
 
+---
+
+## 示例：分割等和子集（LeetCode 416）
+
+**题目描述**：
+
+给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+
+### 示例
+
+```text
+输入：nums = [1,5,11,5]
+输出：true
+解释：数组可以分割成 [1, 5, 5] 和 [11] 。
+```
+
+### 这个是01背包问题，每个数只能用一次，所以只能倒序考虑；之前的全背包可以正序
+
+```python
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        if sum(nums)%2==1:
+            return False
+        mid = sum(nums)//2
+        store = [False]*(mid+1)
+        store[0] = True
+        for i in nums:
+            for j in range(mid, i-1, -1):  #倒序！！！
+                store[j] = store[j] or store[j-i]
+        return store[mid]
+```
+
+
